@@ -106,14 +106,14 @@ export default function DiscoverScreen() {
             </Text>
           </View>
 
-
-          <ScrollView
+              
+          <View
             contentContainerStyle={{
               paddingBottom: hp(70),
             }}
           >
             <NewsSection newsProps={discoverNew?.articles || []} isFetching={isFetching} isLoading={true} refetch={refetch} label="Discovery" />
-          </ScrollView>
+          </View>
 
         </View>
       </View>

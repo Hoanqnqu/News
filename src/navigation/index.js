@@ -12,13 +12,14 @@ import SearchScreen from "../screens/SearchScreen";
 import { useColorScheme } from "nativewind";
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Login from "../components/Modals/Login";
+import { LoginRequiredContext } from "../hooks/loginContext";
+
 const android = Platform.OS === "android";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-const LoginRequiredContext = createContext();
 export default function AppNavigation() {
-    const [isLoginRequired, setIsLoginRequired] = useState(true);
+    const context = useContext(LoginRequiredContext);
     const { colorScheme, toggleColorScheme } = useColorScheme();
     const TabNavigator = () => {
         return (
@@ -50,41 +51,41 @@ export default function AppNavigation() {
     };
 
     return (
-        <LoginRequiredContext.Provider value={isLoginRequired}>
-            <NavigationContainer>
-                <Stack.Navigator
-                    initialRouteName="SplashS"
-                    screenOptions={{
-                        headerShown: false,
+
+        <NavigationContainer>
+            <Stack.Navigator
+                initialRouteName="SplashS"
+                screenOptions={{
+                    headerShown: false,
+                }}
+            >
+
+                <Stack.Screen name="HomeTabs" component={TabNavigator} />
+                <Stack.Screen name="Search" component={SearchScreen} />
+                <Stack.Screen
+                    name="NewsDetails"
+                    component={NewsDetails}
+                    options={{ animation: "slide_from_bottom" }}
+                />
+
+            </Stack.Navigator>
+            {context.isLoginRequired && <>
+                <AnimatedPressable
+                    entering={FadeIn}
+                    exiting={FadeOut}
+                    style={{
+                        ...StyleSheet.absoluteFill,
+                        backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                        zIndex: 1,
                     }}
+                    onPress={() => context.handleLoginRequired(false)}
                 >
 
-                    <Stack.Screen name="HomeTabs" component={TabNavigator} />
-                    <Stack.Screen name="Search" component={SearchScreen} />
-                    <Stack.Screen
-                        name="NewsDetails"
-                        component={NewsDetails}
-                        options={{ animation: "slide_from_bottom" }}
-                    />
+                </AnimatedPressable>
+                <Login />
+            </>}
+        </NavigationContainer>
 
-                </Stack.Navigator>
-                {isLoginRequired && <>
-                    <AnimatedPressable
-                        entering={FadeIn}
-                        exiting={FadeOut}
-                        style={{
-                            ...StyleSheet.absoluteFill,
-                            backgroundColor: 'rgba(0, 0, 0, 0.3)',
-                            zIndex: 1,
-                        }}
-                        onPress={() => setIsLoginRequired(false)}
-                    >
-
-                    </AnimatedPressable>
-                    <Login />
-                </>}
-            </NavigationContainer>
-        </LoginRequiredContext.Provider>
 
     );
 }

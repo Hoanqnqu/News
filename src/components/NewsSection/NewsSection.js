@@ -1,17 +1,17 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 import { View, Text, TouchableOpacity, Image, FlatList, Pressable, StyleSheet } from "react-native";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-
+import { LoginRequiredContext } from "../../hooks/loginContext";
 
 export default function NewsSection({ newsProps, isLoading, isFetching, refetch }) {
   const navigation = useNavigation();
   const [urlList, setUrlList] = useState([]);
   const [bookmarkStatus, setBookmarkStatus] = useState([]);
-
+  const context = useContext(LoginRequiredContext);
   // Function to format the date
   function formatDate(isoDate) {
     const options = {
@@ -101,7 +101,9 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
   );
 
   // Component to render each item in the list
+
   const renderItem = ({ item, index }) => {
+
     return (
       <TouchableOpacity
         className="mb-4 mx-4 space-y-1"
@@ -109,7 +111,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
         onPress={() => handleClick(item)}
       >
         <View className="flex-row justify-start w-[100%]shadow-sm">
-          
+
           <View className="items-start justify-start w-[20%]">
             <Image
               source={{
@@ -155,7 +157,10 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
           {/* Bookmark */}
           <View className="w-[10%] justify-center">
             <TouchableOpacity
-              onPress={() => toggleBookmarkAndSave(item, index)}
+              onPress={() => {
+                context.handleLoginRequired(true)
+                toggleBookmarkAndSave(item, index)
+              }}
             >
               <BookmarkSquareIcon
                 color={bookmarkStatus[index] ? "green" : "gray"}
