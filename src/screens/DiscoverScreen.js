@@ -24,24 +24,17 @@ export default function DiscoverScreen() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const [activeCategory, setActiveCategory] = useState("business");
   const navigation = useNavigation();
-  const [withoutRemoved, setWithoutRemoved] = useState([]);
 
-  useEffect(() => { }, [activeCategory]);
 
-  const { data: discoverNew, isLoading: isDiscoverLoading } = useQuery({
+  const { data: discoverNew, isLoading: isDiscoverLoading, isFetching, refetch } = useQuery({
     queryKey: ["discoverNews", activeCategory],
     queryFn: () => fetchDiscoverNews(activeCategory),
   });
 
   const handleChangeCategory = (category) => {
     setActiveCategory(category);
-
-    const filteredArticles = discoverNew?.articles.filter(
-      (article) => article.title !== "[Removed]"
-    );
-
-    setWithoutRemoved(filteredArticles || []);
   };
+  console.log("----------------------:", discoverNew?.articles.length)
 
   return (
     <SafeAreaView className="pt-8 bg-white dark:bg-neutral-900">
@@ -113,19 +106,15 @@ export default function DiscoverScreen() {
             </Text>
           </View>
 
-          {isDiscoverLoading ? (
-            <View className="justify-center items-center">
-              <Loading />
-            </View>
-          ) : (
-            <ScrollView
-              contentContainerStyle={{
-                paddingBottom: hp(70),
-              }}
-            >
-              <NewsSection newsProps={withoutRemoved} label="Discovery" />
-            </ScrollView>
-          )}
+
+          <ScrollView
+            contentContainerStyle={{
+              paddingBottom: hp(70),
+            }}
+          >
+            <NewsSection newsProps={discoverNew?.articles || []} isFetching={isFetching} isLoading={true} refetch={refetch} label="Discovery" />
+          </ScrollView>
+
         </View>
       </View>
     </SafeAreaView>

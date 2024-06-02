@@ -11,6 +11,7 @@ import { fetchBreakingNews, fetchRecommendedNews } from "../utils/NewsApi";
 import MiniHeader from "../components/Header/MiniHeader";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import BreakingNews from "../components/BreakingNews";
+import Login from "../components/Modals/Login";
 
 export default function HomeScreen() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
@@ -20,17 +21,16 @@ export default function HomeScreen() {
     queryKey: ["breakingNewss"],
     queryFn: fetchBreakingNews,
   });
-
   // Recommended News
-  const { data: recommendedNew, isLoading: isRecommendedLoading } = useQuery({
+  const { data: recommendedNew, isLoading: isRecommendedLoading, refetch, isFetching } = useQuery({
     queryKey: ["recommededNewss"],
     queryFn: fetchRecommendedNews,
   });
 
+
   return (
     <SafeAreaView className=" flex-1 bg-white dark:bg-neutral-900">
       <StatusBar style={colorScheme == "dark" ? "light" : "dark"} />
-
       <View>
         {/* Header */}
         <Header />
@@ -48,20 +48,15 @@ export default function HomeScreen() {
         {/* Recommended News */}
         <View>
           <MiniHeader label="Recommended" />
-          <ScrollView
-            contentContainerStyle={{
-              paddingBottom: hp(80),
-            }}
-          >
-            {isRecommendedLoading ? (
-              <Loading />
-            ) : (
-              <NewsSection
-                label="Recommendation"
-                newsProps={recommendedNew.articles}
-              />
-            )}
-          </ScrollView>
+
+          <NewsSection
+            label="Recommendation"
+            newsProps={recommendedNew?.articles || []}
+            isFetching={isFetching}
+            isLoading={isRecommendedLoading}
+            refetch={refetch}
+          />
+
         </View>
       </View>
     </SafeAreaView>

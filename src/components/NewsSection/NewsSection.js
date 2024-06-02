@@ -1,11 +1,13 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import React, { useCallback, useEffect, useState } from "react";
-import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
+import { View, Text, TouchableOpacity, Image, FlatList, Pressable, StyleSheet } from "react-native";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-export default function NewsSection({ newsProps }) {
+
+export default function NewsSection({ newsProps, isLoading, isFetching, refetch }) {
   const navigation = useNavigation();
   const [urlList, setUrlList] = useState([]);
   const [bookmarkStatus, setBookmarkStatus] = useState([]);
@@ -71,7 +73,7 @@ export default function NewsSection({ newsProps }) {
       console.log("Error Saving/Removing Article", error);
     }
   };
-
+  console.log(isFetching, isLoading)
   // Effect to load saved articles from AsyncStorage when the component mounts
   useFocusEffect(
     useCallback(() => {
@@ -107,7 +109,7 @@ export default function NewsSection({ newsProps }) {
         onPress={() => handleClick(item)}
       >
         <View className="flex-row justify-start w-[100%]shadow-sm">
-          {/* Image */}
+          
           <View className="items-start justify-start w-[20%]">
             <Image
               source={{
@@ -164,20 +166,24 @@ export default function NewsSection({ newsProps }) {
       </TouchableOpacity>
     );
   };
-
   return (
-    <View className="space-y-2 bg-white dark:bg-neutral-900">
+    <View className=" bg-white dark:bg-neutral-900">
       {/* Header */}
-
       <FlatList
         nestedScrollEnabled={true}
-        scrollEnabled={false}
+        onRefresh={async () => {
+          fetch()
+        }}
+        refreshing={isFetching}
+
         data={newsProps}
-        showsVerticalScrollIndicator={false}
+        // showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
       />
     </View>
+
+
   );
 }
 

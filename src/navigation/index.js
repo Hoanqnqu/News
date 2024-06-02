@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-import React from "react";
+import React, { useState, createContext, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
@@ -7,16 +7,18 @@ import HomeScreen from "../screens/HomeScreen";
 import NewsDetails from "../screens/NewsDetails";
 import DiscoverScreen from "../screens/DiscoverScreen";
 import SavedScreen from "../screens/SavedScreen";
-
+import { View, Text, TouchableOpacity, Image, FlatList, Pressable, StyleSheet } from "react-native";
 import SearchScreen from "../screens/SearchScreen";
 import { useColorScheme } from "nativewind";
-
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import Login from "../components/Modals/Login";
 const android = Platform.OS === "android";
-
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const Tab = createBottomTabNavigator();
 const Stack = createNativeStackNavigator();
-
+const LoginRequiredContext = createContext();
 export default function AppNavigation() {
+    const [isLoginRequired, setIsLoginRequired] = useState(true);
     const { colorScheme, toggleColorScheme } = useColorScheme();
     const TabNavigator = () => {
         return (
@@ -48,23 +50,41 @@ export default function AppNavigation() {
     };
 
     return (
-        <NavigationContainer>
-            <Stack.Navigator
-                initialRouteName="SplashS"
-                screenOptions={{
-                    headerShown: false,
-                }}
-            >
+        <LoginRequiredContext.Provider value={isLoginRequired}>
+            <NavigationContainer>
+                <Stack.Navigator
+                    initialRouteName="SplashS"
+                    screenOptions={{
+                        headerShown: false,
+                    }}
+                >
 
-                <Stack.Screen name="HomeTabs" component={TabNavigator} />
-                <Stack.Screen name="Search" component={SearchScreen} />
-                <Stack.Screen
-                    name="NewsDetails"
-                    component={NewsDetails}
-                    options={{ animation: "slide_from_bottom" }}
-                />
+                    <Stack.Screen name="HomeTabs" component={TabNavigator} />
+                    <Stack.Screen name="Search" component={SearchScreen} />
+                    <Stack.Screen
+                        name="NewsDetails"
+                        component={NewsDetails}
+                        options={{ animation: "slide_from_bottom" }}
+                    />
 
-            </Stack.Navigator>
-        </NavigationContainer>
+                </Stack.Navigator>
+                {isLoginRequired && <>
+                    <AnimatedPressable
+                        entering={FadeIn}
+                        exiting={FadeOut}
+                        style={{
+                            ...StyleSheet.absoluteFill,
+                            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+                            zIndex: 1,
+                        }}
+                        onPress={() => setIsLoginRequired(false)}
+                    >
+
+                    </AnimatedPressable>
+                    <Login />
+                </>}
+            </NavigationContainer>
+        </LoginRequiredContext.Provider>
+
     );
 }
