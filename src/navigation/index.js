@@ -7,12 +7,15 @@ import HomeScreen from "../screens/HomeScreen";
 import NewsDetails from "../screens/NewsDetails";
 import DiscoverScreen from "../screens/DiscoverScreen";
 import SavedScreen from "../screens/SavedScreen";
+import ProfileScreen from "../screens/ProfileScreen";
 import { View, Text, TouchableOpacity, Image, FlatList, Pressable, StyleSheet } from "react-native";
 import SearchScreen from "../screens/SearchScreen";
 import { useColorScheme } from "nativewind";
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import Login from "../components/Modals/Login";
 import { LoginRequiredContext } from "../hooks/loginContext";
+import { AuthContext } from "../hooks/authContext";
+import Loading from "../components/Loading/Loading";
 
 const android = Platform.OS === "android";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
@@ -46,10 +49,14 @@ export default function AppNavigation() {
                 <Tab.Screen name="Discover" component={DiscoverScreen} />
                 <Tab.Screen name="Saved" component={SavedScreen} />
                 <Tab.Screen name="Search" component={SearchScreen} />
+                <Stack.Screen name="Profile" component={ProfileScreen} />
             </Tab.Navigator>
         );
     };
-
+    const { loading } = useContext(AuthContext);
+    if (loading) {
+        return <Loading />;
+    }
     return (
 
         <NavigationContainer>
@@ -67,6 +74,7 @@ export default function AppNavigation() {
                     component={NewsDetails}
                     options={{ animation: "slide_from_bottom" }}
                 />
+
 
             </Stack.Navigator>
             {context.isLoginRequired && <>

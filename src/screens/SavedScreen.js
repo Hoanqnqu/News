@@ -1,5 +1,5 @@
 import { View, Text, TouchableOpacity, Image, FlatList } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect, useState, useContext } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect, useNavigation } from "@react-navigation/native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -7,9 +7,12 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 // import { StatusBar } from "expo-status-bar";
 import { useColorScheme } from "nativewind";
+import { AuthContext } from "../hooks/authContext";
+import { AuthRequirement } from "./AuthRequired";
 
 export default function SavedScreen() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
+  const { userInfo } = useContext(AuthContext);
   const navigation = useNavigation();
   const [savedArticles, setSavedArticles] = useState([]);
   const [bookmarkStatus, setBookmarkStatus] = useState([]);
@@ -176,10 +179,13 @@ export default function SavedScreen() {
     );
   };
 
+  if (!userInfo) {
+    return (<AuthRequirement />)
+  }
   return (
     <SafeAreaView className="p-4 bg-white flex-1 dark:bg-neutral-900">
       {/* <StatusBar style={colorScheme == "dark" ? "light" : "dark"} /> */}
-      
+
       {/* Header  */}
       <View className="flex-row justify-between items-center">
         <Text

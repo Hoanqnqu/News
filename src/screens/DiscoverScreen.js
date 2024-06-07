@@ -34,7 +34,7 @@ export default function DiscoverScreen() {
   const handleChangeCategory = (category) => {
     setActiveCategory(category);
   };
-  console.log("----------------------:", discoverNew?.articles.length)
+  console.log("----------------------:", discoverNew?.data.length)
 
   return (
     <SafeAreaView className="pt-8 bg-white dark:bg-neutral-900">
@@ -106,13 +106,13 @@ export default function DiscoverScreen() {
             </Text>
           </View>
 
-              
+
           <View
             contentContainerStyle={{
               paddingBottom: hp(70),
             }}
           >
-            <NewsSection newsProps={discoverNew?.articles || []} isFetching={isFetching} isLoading={true} refetch={refetch} label="Discovery" />
+            <NewsSection newsProps={discoverNew?.data || []} isFetching={isFetching} isLoading={true} refetch={refetch} label="Discovery" />
           </View>
 
         </View>

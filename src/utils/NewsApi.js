@@ -3,13 +3,13 @@ import axios from "axios";
 
 // Endpoints
 
-const apiBaseUrl = "https://newsapi.org/v2";
+const apiBaseUrl = "http://192.168.1.6:3000";
 
-const breakingNewsUrl = `${apiBaseUrl}/top-headlines?country=us&apiKey=${newsApiKey}`;
-const recommendedNewsUrl = `${apiBaseUrl}/top-headlines?country=us&category=business&apiKey=${newsApiKey}`;
+const breakingNewsUrl = `${apiBaseUrl}/news`;
+const recommendedNewsUrl = `${apiBaseUrl}/news`;
 
 const discoverNewsUrl = (discover) =>
-  `${apiBaseUrl}/top-headlines?country=us&category=${discover}&apiKey=${newsApiKey}`;
+  `${apiBaseUrl}/news?country=us&category=${discover}`;
 
 
 const searchNewsUrl = (query) =>
@@ -25,6 +25,7 @@ const newsApiCall = async (endpoints, params) => {
   try {
     const response = await axios.request(options);
     return response.data;
+
   } catch (error) {
     console.log(error);
     return {};

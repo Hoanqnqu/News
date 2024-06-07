@@ -27,7 +27,7 @@ export default function HomeScreen() {
     queryFn: fetchRecommendedNews,
   });
 
-
+  console.log(data?.data?.length)
   return (
     <SafeAreaView className=" flex-1 bg-white dark:bg-neutral-900">
       <StatusBar style={colorScheme == "dark" ? "light" : "dark"} />
@@ -41,7 +41,7 @@ export default function HomeScreen() {
         ) : (
           <View className="">
             <MiniHeader label="Breaking News" />
-            <BreakingNews label="Breaking News" data={data.articles} />
+            <BreakingNews label="Breaking News" data={data?.data} />
           </View>
         )}
 
@@ -51,7 +51,7 @@ export default function HomeScreen() {
 
           <NewsSection
             label="Recommendation"
-            newsProps={recommendedNew?.articles || []}
+            newsProps={recommendedNew?.data || []}
             isFetching={isFetching}
             isLoading={isRecommendedLoading}
             refetch={refetch}

@@ -6,12 +6,14 @@ import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { LoginRequiredContext } from "../../hooks/loginContext";
+import { AuthContext } from "../../hooks/authContext";
 
 export default function NewsSection({ newsProps, isLoading, isFetching, refetch }) {
   const navigation = useNavigation();
   const [urlList, setUrlList] = useState([]);
   const [bookmarkStatus, setBookmarkStatus] = useState([]);
   const context = useContext(LoginRequiredContext);
+  const { userInfo } = useContext(AuthContext);
   // Function to format the date
   function formatDate(isoDate) {
     const options = {
@@ -116,7 +118,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
             <Image
               source={{
                 uri:
-                  item.urlToImage ||
+                  item.image_url ||
                   "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
               }}
               style={{ width: hp(9), height: hp(10) }}
@@ -150,7 +152,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
 
             {/* Date */}
             <Text className="text-xs text-gray-700 dark:text-neutral-300">
-              {formatDate(item.publishedAt)}
+              {formatDate(item.publish_at)}
             </Text>
           </View>
 
@@ -158,8 +160,15 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
           <View className="w-[10%] justify-center">
             <TouchableOpacity
               onPress={() => {
-                context.handleLoginRequired(true)
-                toggleBookmarkAndSave(item, index)
+                console.log("userInfo:", userInfo)
+                if (!userInfo) {
+
+                  context.handleLoginRequired(true)
+                }
+                else {
+                  toggleBookmarkAndSave(item, index)
+                }
+
               }}
             >
               <BookmarkSquareIcon
@@ -168,7 +177,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
             </TouchableOpacity>
           </View>
         </View>
-      </TouchableOpacity>
+      </TouchableOpacity >
     );
   };
   return (
