@@ -1,4 +1,4 @@
-import { View } from 'react-native';
+import { View, Text } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import { signInWithGoogle } from '../utils/auth';
@@ -10,6 +10,7 @@ import { LoginRequiredContext } from "../hooks/loginContext";
 import { AuthContext } from '../hooks/authContext';
 const CommonLogin = () => {
     const context = useContext(LoginRequiredContext);
+    const [token, setToken] = useState("co cl");
     const { login } = useContext(AuthContext);
     const mutation = useMutation({
         mutationFn: (newTodo) => {
@@ -25,6 +26,7 @@ const CommonLogin = () => {
     }, [mutation.isSuccess])
     const handleSignIn = async () => {
         const userInfo = await signInWithGoogle();
+        setToken(userInfo?.user?.id)
         console.log({
             auth_id: userInfo?.user?.id,
             name: userInfo?.user?.name,
@@ -56,6 +58,9 @@ const CommonLogin = () => {
                 size={GoogleSigninButton.Size.Wide}
                 onPress={handleSignIn}
             />
+            <Text>
+                {token ? token : "no token"}
+            </Text>
         </View>
     )
 }

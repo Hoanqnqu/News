@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Endpoints
 
-const apiBaseUrl = "http://192.168.1.6:3000";
+const apiBaseUrl = "http://13.232.161.37:3000";
 
 const breakingNewsUrl = `${apiBaseUrl}/news`;
 const recommendedNewsUrl = `${apiBaseUrl}/news`;

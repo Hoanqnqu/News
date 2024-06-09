@@ -6,7 +6,7 @@ import {
 } from '@react-native-google-signin/google-signin';
 
 GoogleSignin.configure({
-    webClientId: '',
+    webClientId: '869965077161-dh9p7ervk215dm02u9nnenjkv2jn2vis.apps.googleusercontent.com',
 });
 // /869965077161-dh9p7ervk215dm02u9nnenjkv2jn2vis.apps.googleusercontent.com
 
