@@ -2,16 +2,20 @@ import {
   View,
   Text,
   ActivityIndicator,
+  Image,
   TouchableOpacity,
   Dimensions,
+  ScrollView,
 } from "react-native";
+import moment from 'moment';
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
+import RenderHtml from 'react-native-render-html';
 import { WebView } from "react-native-webview";
 import { ChevronLeftIcon, ShareIcon } from "react-native-heroicons/outline";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import AntDesignIcon from "react-native-vector-icons/AntDesign";
 const { height, width } = Dimensions.get("window");
 
 export default function NewsDetails() {
@@ -88,7 +92,7 @@ export default function NewsDetails() {
 
   return (
     <>
-      <View className="w-full flex-row justify-between items-center px-4 pt-10 pb-4 bg-white">
+      <View className="w-full flex-row justify-between items-center px-4 pt-4 pb-4 bg-white">
         <View className="bg-gray-100 p-2 rounded-full items-center justify-center">
           <TouchableOpacity onPress={() => navigation.goBack()}>
             <ChevronLeftIcon size={25} strokeWidth={3} color="gray" />
@@ -97,8 +101,13 @@ export default function NewsDetails() {
 
         <View className="space-x-3 rounded-full items-center justify-center flex-row">
           <TouchableOpacity className="bg-gray-100 p-2 rounded-full">
-            <ShareIcon size={25} color="gray" strokeWidth={2} />
+            <AntDesignIcon name="like2" size={25} color="gray" strokeWidth={2} />
           </TouchableOpacity>
+
+          <TouchableOpacity className="bg-gray-100 p-2 rounded-full">
+            <AntDesignIcon name="dislike2" size={25} color="gray" strokeWidth={2} />
+          </TouchableOpacity>
+
           <TouchableOpacity
             className="bg-gray-100 p-2 rounded-full"
             onPress={toggleBookmarkAndSave}
@@ -109,26 +118,61 @@ export default function NewsDetails() {
               strokeWidth={2}
             />
           </TouchableOpacity>
+
+          <TouchableOpacity className="bg-gray-100 p-2 rounded-full">
+            <ShareIcon size={25} color="gray" strokeWidth={2} />
+          </TouchableOpacity>
+
         </View>
       </View>
-      {/* WebView */}
-      <WebView
-        source={{ uri: item.url }}
-        onLoadStart={() => setVisible(true)}
-        onLoadEnd={() => setVisible(false)}
-      />
-
-      {visible && (
-        <ActivityIndicator
-          size={"large"}
-          color={"green"}
-          style={{
-            position: "absolute",
-            top: height / 2,
-            left: width / 2,
+      <ScrollView className="bg-white text-gray-900 dark:text-neutral-300">
+        <Text
+          className="text-2xl font-bold px-4 pb-4 text-gray-900 dark:text-neutral-300"
+        >
+          {item.title}
+        </Text>
+        <Image
+          source={{
+            uri:
+              item.image_url ||
+              "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
           }}
+
+          resizeMode="cover"
+          className="w-full h-60"
         />
-      )}
+        <Text
+          className="text-xl font-semibold italic px-4 text-gray-900 dark:text-neutral-300"
+        >
+          {item.description}
+        </Text>
+        <View
+          className="w-full text-gray-900 dark:text-neutral-300 px-4"
+        >
+          <RenderHtml className="px-4" source={{
+            html: item.content,
+          }} contentWidth={width} />
+        </View>
+        <Text
+          className={"px-4 py-4 text-gray-900 dark:text-neutral-300"}
+          style={{
+
+            fontSize: 15,
+            paddingTop: 10,
+            fontWeight: 'bold',
+          }}>
+          Author: {item.author === null ? 'Legit Source' : item.author}
+        </Text>
+        <Text
+          className={"px-4 py-4 text-gray-900 dark:text-neutral-300"}
+          style={{
+            fontSize: 15,
+            marginTop: 10,
+            paddingBottom: 30,
+          }}>
+          🕘 {moment(item.publishedAt).format('MMMM Do YYYY, h:mm a')}
+        </Text>
+      </ ScrollView>
     </>
   );
 }

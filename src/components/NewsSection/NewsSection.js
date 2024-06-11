@@ -7,6 +7,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { LoginRequiredContext } from "../../hooks/loginContext";
 import { AuthContext } from "../../hooks/authContext";
+  
 
 export default function NewsSection({ newsProps, isLoading, isFetching, refetch }) {
   const navigation = useNavigation();
@@ -176,6 +177,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
               />
             </TouchableOpacity>
           </View>
+
         </View>
       </TouchableOpacity >
     );
@@ -186,7 +188,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
       <FlatList
         nestedScrollEnabled={true}
         onRefresh={async () => {
-          fetch()
+          refetch()
         }}
         refreshing={isFetching}
 

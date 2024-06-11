@@ -3,7 +3,7 @@ import axios from "axios";
 
 // Endpoints
 
-const apiBaseUrl = "http://13.232.161.37:3000";
+const apiBaseUrl = "http://192.168.1.9:3000";
 
 const breakingNewsUrl = `${apiBaseUrl}/news`;
 const recommendedNewsUrl = `${apiBaseUrl}/news`;
@@ -13,7 +13,7 @@ const discoverNewsUrl = (discover) =>
 
 
 const searchNewsUrl = (query) =>
-  `${apiBaseUrl}/everything?q=${query}&apiKey=${newsApiKey}`;
+  `${apiBaseUrl}/news?keyword=${query}`;
 
 const newsApiCall = async (endpoints, params) => {
   const options = {

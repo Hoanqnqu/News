@@ -3,6 +3,8 @@ import React, { useState, createContext, useContext } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import HomeScreen from "../screens/HomeScreen";
 import NewsDetails from "../screens/NewsDetails";
 import DiscoverScreen from "../screens/DiscoverScreen";
@@ -45,11 +47,26 @@ export default function AppNavigation() {
                     },
                 })}
             >
-                <Tab.Screen name="Home" component={HomeScreen} />
-                <Tab.Screen name="Discover" component={DiscoverScreen} />
-                <Tab.Screen name="Saved" component={SavedScreen} />
-                <Tab.Screen name="Search" component={SearchScreen} />
-                <Stack.Screen name="Profile" component={ProfileScreen} />
+                <Tab.Screen name="Home" component={HomeScreen} options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="home" color={color} size={24} />
+                    ),
+                }} />
+                <Tab.Screen name="Discover" component={DiscoverScreen} options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="earth" color={color} size={24} />
+                    ),
+                }} />
+                <Tab.Screen name="Saved" component={SavedScreen} options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="save-outline" color={color} size={24} />
+                    ),
+                }} />
+                <Stack.Screen name="Profile" component={ProfileScreen} options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <FontAwesome name="user-o" color={color} size={24} />
+                    ),
+                }} />
             </Tab.Navigator>
         );
     };
@@ -67,7 +84,11 @@ export default function AppNavigation() {
                 }}
             >
 
-                <Stack.Screen name="HomeTabs" component={TabNavigator} />
+                <Stack.Screen name="HomeTabs" component={TabNavigator} options={{
+                    tabBarIcon: ({ color, size }) => (
+                        <Ionicons name="search" color={color} size={30} />
+                    ),
+                }} />
                 <Stack.Screen name="Search" component={SearchScreen} />
                 <Stack.Screen
                     name="NewsDetails"

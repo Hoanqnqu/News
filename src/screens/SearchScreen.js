@@ -21,7 +21,7 @@ export default function SearchScreen() {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = async (search) => {
-    if (search && search?.length > 2) {
+    if (search && search?.length > 0) {
       setLoading(true);
       setResults([]);
       setSearchTerm(search);
@@ -31,8 +31,8 @@ export default function SearchScreen() {
 
         setLoading(false);
 
-        if (data && data.articles) {
-          setResults(data.articles);
+        if (data && data.data) {
+          setResults(data.data);
         }
       } catch (error) {
         console.error("Error fetching news:", error);
@@ -71,13 +71,15 @@ export default function SearchScreen() {
         </Text>
       </View>
 
-      <ScrollView
+      <View
         contentContainerStyle={{
           paddingBottom: hp(5),
         }}
       >
-        <NewsSection newsProps={results} label="Search Results" />
-      </ScrollView>
+        <NewsSection newsProps={results} label="Search Results" isFetching={false}
+          isLoading={loading}
+        />
+      </View>
     </View>
   );
 }

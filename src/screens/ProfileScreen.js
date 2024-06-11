@@ -10,6 +10,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { AuthRequirement } from './AuthRequired';
 import { AuthContext } from '../hooks/authContext';
 
+GoogleSignin.configure({
+  webClientId: '',
+});
 //869965077161-dh9p7ervk215dm02u9nnenjkv2jn2vis.apps.googleusercontent.com
 const ProfileScreen = () => {
   const { userInfo, logout } = useContext(AuthContext);
