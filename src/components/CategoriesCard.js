@@ -2,12 +2,17 @@ import { View, Text, ScrollView, TouchableOpacity, Image } from "react-native";
 import React from "react";
 import { categoryData } from "../constants";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import Loading from "./Loading/Loading";
 
 export default function CategoriesCard({
   categories,
+  isCategoriesLoading,
   activeCategory,
   handleChangeCategory,
 }) {
+  if (isCategoriesLoading) {
+    return <Loading />;
+  }
   return (
     <View>
       <ScrollView
@@ -19,7 +24,7 @@ export default function CategoriesCard({
         }}
       >
         {categories.map((category, index) => {
-          let isActive = category.title == activeCategory;
+          let isActive = category.name == activeCategory;
           let activeButtonClass = isActive
             ? "bg-green-700 "
             : "bg-black/10 dark:bg-neutral-400 ";
@@ -30,7 +35,7 @@ export default function CategoriesCard({
           return (
             <TouchableOpacity
               key={index}
-              onPress={() => handleChangeCategory(category.title)}
+              onPress={() => handleChangeCategory(category.id)}
               className="flex items-center space-y-1"
             >
               <View
@@ -44,7 +49,7 @@ export default function CategoriesCard({
                     fontSize: hp(1.6),
                   }}
                 >
-                  {category.title}
+                  {category.name}
                 </Text>
               </View>
             </TouchableOpacity>

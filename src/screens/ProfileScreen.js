@@ -1,17 +1,14 @@
-import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
-import { Button, Text, View } from 'react-native';
+
+import { Button, Text, View, SafeAreaView, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
-import React, { useEffect, useState, useContext } from 'react';
-import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
+import React, { useContext } from 'react';
 import { signInWithGoogle } from '../utils/auth';
-import { useMutation } from '@tanstack/react-query';
-import apiInstance from '../utils/axiosConfig';
-import AsyncStorage from "@react-native-async-storage/async-storage"
+
 import { AuthRequirement } from './AuthRequired';
 import { AuthContext } from '../hooks/authContext';
 
 GoogleSignin.configure({
-  webClientId: '',
+  webClientId: '869965077161-dh9p7ervk215dm02u9nnenjkv2jn2vis.apps.googleusercontent.com',
 });
 //869965077161-dh9p7ervk215dm02u9nnenjkv2jn2vis.apps.googleusercontent.com
 const ProfileScreen = () => {
@@ -50,16 +47,114 @@ const ProfileScreen = () => {
     return (<AuthRequirement />)
   }
   return (
-    <View
-      className="flex flex-col justify-center items-center"
-      style={{
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-      }}
-    >
-      <Button title="Sign Out" onPress={signOut} />
-    </View>
+    <>
+      <SafeAreaView style={styles.container}>
+        <ScrollView showsVerticalScrollIndicator={false} >
+          <TouchableOpacity style={styles.button} className="bg-[#52575D] flex justify-center items-center w-[100px] right-0 absolute my-4 mx-4" onPress={signOut}>
+            <Text style={styles.buttonText}>Logout</Text>
+          </TouchableOpacity>
+          <View style={{ alignSelf: "center" }}>
+            <View style={styles.profileImage}>
+              <Image source={{
+                uri:
+                  'https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/365120153_3332590973717802_2390387319335403871_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEjVLT0-I_uLGz9cnm1Q4Ao-ISRkwI191n4hJGTAjX3WbvlPBqV4VrhTuricRcPRrLziqlJt3M2TgNgXwRCvIJM&_nc_ohc=NBRNM2pYLNkQ7kNvgG7etTV&_nc_ht=scontent.fdad1-3.fna&oh=00_AYAo2YOo6R_tLoSQrsJF64UQ5EaM4av44BhaDqwTtOhFnA&oe=666E5F57',
+              }} style={styles.image} ></Image>
+            </View>
+            <View style={styles.add}>
+
+            </View>
+          </View>
+
+          <View style={styles.infoContainer}>
+            <Text style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>Julie</Text>
+            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>nhathoangthuychaub1@gmail.com</Text>
+            <Text style={[styles.text, { color: "#AEB5BC", fontSize: 14 }]}>0852336242</Text>
+          </View>
+
+
+        </ScrollView>
+      </SafeAreaView>
+
+    </>
   )
 
 }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: "#FFF",
+    position: "relative"
+  },
+  text: {
+    fontFamily: "HelveticaNeue",
+    color: "#52575D"
+  },
+  image: {
+    flex: 1,
+    height: undefined,
+    width: undefined
+  },
+  titleBar: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 24,
+    marginHorizontal: 16
+  },
+  subText: {
+    fontSize: 12,
+    color: "#AEB5BC",
+    textTransform: "uppercase",
+    fontWeight: "500"
+  },
+  profileImage: {
+    marginTop: 50,
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    overflow: "hidden"
+  },
+  dm: {
+    backgroundColor: "#41444B",
+    position: "absolute",
+    top: 20,
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  add: {
+    backgroundColor: "#41444B",
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: "center",
+    justifyContent: "center"
+  },
+  infoContainer: {
+    alignSelf: "center",
+    alignItems: "center",
+    marginTop: 16
+  },
+  statsContainer: {
+    flexDirection: "row",
+    alignSelf: "center",
+    marginTop: 32
+  },
+  button: {
+
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    borderRadius: 25,
+  },
+  buttonText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
+  },
+
+});
 export default ProfileScreen

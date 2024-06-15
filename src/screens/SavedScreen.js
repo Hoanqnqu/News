@@ -9,24 +9,23 @@ import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import { useColorScheme } from "nativewind";
 import { AuthContext } from "../hooks/authContext";
 import { AuthRequirement } from "./AuthRequired";
+import { fetchsavedNews } from "../utils/NewsApi";
+import { useQuery } from "@tanstack/react-query";
+import Loading from "../components/Loading/Loading";
 
 export default function SavedScreen() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const { userInfo } = useContext(AuthContext);
   const navigation = useNavigation();
-  const [savedArticles, setSavedArticles] = useState([]);
-  const [bookmarkStatus, setBookmarkStatus] = useState([]);
-  const [urlList, setUrlList] = useState([]);
-
+  const { data, isLoading, refetch, isFetching } = useQuery({
+    queryKey: ["savedNewss"],
+    queryFn: fetchsavedNews,
+  });
+  console.log(data?.length)
   // Function to handle click on an item
   const handleClick = (item) => {
     navigation.navigate("NewsDetails", item);
   };
-
-  useEffect(() => {
-    const urls = savedArticles.map((item) => item.url);
-    setUrlList(urls);
-  }, [savedArticles]);
 
   // Function to format the date
   function formatDate(isoDate) {
@@ -42,76 +41,13 @@ export default function SavedScreen() {
 
   const toggleBookmarkAndSave = async (item, index) => {
     try {
-      const savedArticles = await AsyncStorage.getItem("savedArticles");
-      let savedArticlesArray = savedArticles ? JSON.parse(savedArticles) : [];
-
-      // Check if the article is already in the bookmarked list
-      const isArticleBookmarked = savedArticlesArray.some(
-        (savedArticle) => savedArticle.url === item.url
-      );
-
-      if (!isArticleBookmarked) {
-        // If the article is not bookmarked, add it to the bookmarked list
-        savedArticlesArray.push(item);
-        await AsyncStorage.setItem(
-          "savedArticles",
-          JSON.stringify(savedArticlesArray)
-        );
-        const updatedStatus = [...bookmarkStatus];
-        updatedStatus[index] = true;
-        setBookmarkStatus(updatedStatus);
-        // console.log("Article is bookmarked");
-      } else {
-        // If the article is already bookmarked, remove it from the list
-        const updatedSavedArticlesArray = savedArticlesArray.filter(
-          (savedArticle) => savedArticle.url !== item.url
-        );
-        await AsyncStorage.setItem(
-          "savedArticles",
-          JSON.stringify(updatedSavedArticlesArray)
-        );
-        const updatedStatus = [...bookmarkStatus];
-        updatedStatus[index] = false;
-        setBookmarkStatus(updatedStatus);
-        // console.log("Article is removed from bookmarks");
-      }
     } catch (error) {
       // console.log("Error Saving/Removing Article", error);
     }
   };
 
-  // Load saved articles from AsyncStorage when the screen gains focus
-  useFocusEffect(
-    useCallback(() => {
-      const loadSavedArticles = async () => {
-        try {
-          const savedArticles = await AsyncStorage.getItem("savedArticles");
-          const savedArticlesArray = savedArticles
-            ? JSON.parse(savedArticles)
-            : [];
-
-          // const isArticleBookmarkedList = urlList.map((url) =>
-          //   savedArticlesArray.some((savedArticle) => savedArticle.url === url)
-          // );
-
-          // Set the bookmark status for all items based on the loaded data
-          // setBookmarkStatus(isArticleBookmarkedList);
-          setSavedArticles(savedArticlesArray);
-        } catch (error) {
-          // console.log("Error loading saved articles", error);
-        }
-      };
-
-      loadSavedArticles();
-      // console.log("Pull saved articles from AsyncStorage");
-    }, [navigation, urlList]) // Include 'navigation' in the dependencies array if needed
-  );
-
   const clearSavedArticles = async () => {
     try {
-      await AsyncStorage.removeItem("savedArticles");
-      setSavedArticles([]);
-      console.log("Clear all saved articles");
     } catch (error) {
       // console.log("Error clearing saved articles", error);
     }
@@ -130,7 +66,7 @@ export default function SavedScreen() {
             <Image
               source={{
                 uri:
-                  item.urlToImage ||
+                  item.image_url ||
                   "https://images.unsplash.com/photo-1495020689067-958852a7765e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8bmV3c3xlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=500&q=60",
               }}
               style={{ width: hp(9), height: hp(10) }}
@@ -162,7 +98,7 @@ export default function SavedScreen() {
 
             {/* Date */}
             <Text className="text-xs text-gray-700 dark:text-neutral-300">
-              {formatDate(item.publishedAt)}
+              {formatDate(item.publish_at)}
             </Text>
           </View>
 
@@ -181,6 +117,9 @@ export default function SavedScreen() {
 
   if (!userInfo) {
     return (<AuthRequirement />)
+  }
+  if (isLoading) {
+    return <Loading />
   }
   return (
     <SafeAreaView className="p-4 bg-white flex-1 dark:bg-neutral-900">
@@ -213,7 +152,7 @@ export default function SavedScreen() {
 
       <View style={{ marginVertical: hp(2) }} className="space-y-2 ">
         <FlatList
-          data={savedArticles}
+          data={data}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.title}
           renderItem={renderItem}

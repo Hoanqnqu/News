@@ -1,4 +1,4 @@
-import { View, Text } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import React, { useEffect, useState, useContext } from 'react';
 import { GoogleSigninButton } from '@react-native-google-signin/google-signin';
 import { signInWithGoogle } from '../utils/auth';
@@ -6,6 +6,7 @@ import { useMutation } from '@tanstack/react-query';
 import apiInstance from '../utils/axiosConfig';
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import LottieView from 'lottie-react-native';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 import { LoginRequiredContext } from "../hooks/loginContext";
 import { AuthContext } from '../hooks/authContext';
 const CommonLogin = () => {
@@ -44,7 +45,7 @@ const CommonLogin = () => {
         })
     };
     return (
-        <View className="flex-1 justify-center items-center">
+        <View className="flex-1 justify-center items-center  w-full">
             <LottieView
                 style={{
                     width: 400,
@@ -54,13 +55,10 @@ const CommonLogin = () => {
                 autoPlay
                 loop
             />
-            <GoogleSigninButton
-                size={GoogleSigninButton.Size.Wide}
-                onPress={handleSignIn}
-            />
-            <Text>
-                {token ? token : "no token"}
-            </Text>
+            <TouchableOpacity onPress={handleSignIn} className="flex flex-row mt-10 justify-center items-center bg-slate-200 px-10 rounded-full py-3">
+                <Ionicons name='logo-google' size={24} color='black' />
+                <Text className="ml-4" >Continue with Google</Text>
+            </TouchableOpacity>
         </View>
     )
 }

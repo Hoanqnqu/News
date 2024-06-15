@@ -21,7 +21,7 @@ const Login = () => {
             }}
         >
             <View
-                className="flex flex-col items-center justify-center  h-full gap-10"
+                className="flex flex-col items-center justify-center h-full"
             >
                 <Text className="text-2xl font-bold text-black">Welcome back</Text>
                 <CommonLogin />

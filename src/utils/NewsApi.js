@@ -1,19 +1,19 @@
 import { newsApiKey } from "./ApiKey";
 import axios from "axios";
-
+import AsyncStorage from "@react-native-async-storage/async-storage"
 // Endpoints
+import apiInstance from "./axiosConfig";
 
 const apiBaseUrl = "http://192.168.1.9:3000";
 
-const breakingNewsUrl = `${apiBaseUrl}/news`;
-const recommendedNewsUrl = `${apiBaseUrl}/news`;
+const latestNewsURL = `${apiBaseUrl}/latest`;
+const recommendedNewsUrl = `${apiBaseUrl}/recommend`;
 
-const discoverNewsUrl = (discover) =>
-  `${apiBaseUrl}/news?country=us&category=${discover}`;
-
+const discoverNewsUrl = `${apiBaseUrl}/popular`;
 
 const searchNewsUrl = (query) =>
   `${apiBaseUrl}/news?keyword=${query}`;
+const savedNewsUrl = `${apiBaseUrl}/saved`;
 
 const newsApiCall = async (endpoints, params) => {
   const options = {
@@ -23,7 +23,7 @@ const newsApiCall = async (endpoints, params) => {
   };
 
   try {
-    const response = await axios.request(options);
+    const response = await apiInstance.request(options);
     return response.data;
 
   } catch (error) {
@@ -32,16 +32,16 @@ const newsApiCall = async (endpoints, params) => {
   }
 };
 
-export const fetchBreakingNews = async () => {
-  return await newsApiCall(breakingNewsUrl);
+export const fetchLatestNews = async () => {
+  return await newsApiCall(latestNewsURL);
 };
 
 export const fetchRecommendedNews = async () => {
   return await newsApiCall(recommendedNewsUrl);
 };
 
-export const fetchDiscoverNews = async (discover) => {
-  return await newsApiCall(discoverNewsUrl(discover));
+export const fetchDiscoverNews = async (category) => {
+  return await newsApiCall(discoverNewsUrl, category ? { category } : {});
 };
 
 
@@ -49,3 +49,8 @@ export const fetchSearchNews = async (query) => {
   const endpoint = searchNewsUrl(query);
   return await newsApiCall(endpoint);
 };
+
+export const fetchsavedNews = async () => {
+  const res = await newsApiCall(`${apiBaseUrl}/saved`)
+  return res.data
+}

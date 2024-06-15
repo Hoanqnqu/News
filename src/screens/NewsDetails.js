@@ -2,11 +2,15 @@ import {
   View,
   Text,
   ActivityIndicator,
+  Pressable,
   Image,
   TouchableOpacity,
   Dimensions,
   ScrollView,
+  StyleSheet,
+
 } from "react-native";
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import moment from 'moment';
 import React, { useEffect, useState } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
@@ -16,8 +20,10 @@ import { ChevronLeftIcon, ShareIcon } from "react-native-heroicons/outline";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
+import OcticonsIcon from "react-native-vector-icons/Octicons";
+import Comment from "../components/Modals/Comment";
 const { height, width } = Dimensions.get("window");
-
+const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 export default function NewsDetails() {
   const { params: item } = useRoute();
   const [visible, setVisible] = useState(false);
@@ -92,6 +98,20 @@ export default function NewsDetails() {
 
   return (
     <>
+      {visible && <>
+        <AnimatedPressable
+          entering={FadeIn}
+          exiting={FadeOut}
+          style={{
+            ...StyleSheet.absoluteFill,
+            backgroundColor: 'rgba(0, 0, 0, 0.3)',
+            zIndex: 1,
+          }}
+          onPress={() => setVisible(false)}
+        >
+        </AnimatedPressable>
+        <Comment />
+      </>}
       <View className="w-full flex-row justify-between items-center px-4 pt-4 pb-4 bg-white">
         <View className="bg-gray-100 p-2 rounded-full items-center justify-center">
           <TouchableOpacity onPress={() => navigation.goBack()}>
@@ -106,6 +126,10 @@ export default function NewsDetails() {
 
           <TouchableOpacity className="bg-gray-100 p-2 rounded-full">
             <AntDesignIcon name="dislike2" size={25} color="gray" strokeWidth={2} />
+          </TouchableOpacity>
+
+          <TouchableOpacity onPress={() => setVisible(true)} className="bg-gray-100 p-2 rounded-full">
+            <OcticonsIcon name="comment" size={25} color="gray" strokeWidth={2} />
           </TouchableOpacity>
 
           <TouchableOpacity

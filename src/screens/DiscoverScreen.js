@@ -12,18 +12,24 @@ import { useColorScheme } from "nativewind";
 // import { StatusBar } from "expo-status-bar";
 import Loading from "../components/Loading/Loading";
 import { useQuery } from "@tanstack/react-query";
-import { categories } from "../constants";
 import CategoriesCard from "../components/CategoriesCard";
 import NewsSection from "../components/NewsSection/NewsSection";
 import { MagnifyingGlassIcon } from "react-native-heroicons/outline";
 import { fetchDiscoverNews } from "../utils/NewsApi";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { useNavigation } from "@react-navigation/native";
+import { fetchAllCategories } from "../utils/CategoryAPI";
 
 export default function DiscoverScreen() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
-  const [activeCategory, setActiveCategory] = useState("business");
+  const [activeCategory, setActiveCategory] = useState("");
   const navigation = useNavigation();
+
+    // Categories
+    const { data: categories, isLoading: isCategoriesLoading } = useQuery({
+      queryKey: ["categories"],
+      queryFn: fetchAllCategories,
+    });
 
 
   const { data: discoverNew, isLoading: isDiscoverLoading, isFetching, refetch } = useQuery({
@@ -34,7 +40,7 @@ export default function DiscoverScreen() {
   const handleChangeCategory = (category) => {
     setActiveCategory(category);
   };
-  console.log("----------------------:", discoverNew?.data.length)
+
 
   return (
     <SafeAreaView className="pt-8 bg-white dark:bg-neutral-900">
@@ -81,6 +87,7 @@ export default function DiscoverScreen() {
             categories={categories}
             activeCategory={activeCategory}
             handleChangeCategory={handleChangeCategory}
+            isCategoriesLoading={isCategoriesLoading}
           />
         </View>
 
@@ -108,6 +115,7 @@ export default function DiscoverScreen() {
 
 
           <View
+          className="h-[500px]"
             contentContainerStyle={{
               paddingBottom: hp(70),
             }}

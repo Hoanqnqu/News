@@ -7,7 +7,8 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { LoginRequiredContext } from "../../hooks/loginContext";
 import { AuthContext } from "../../hooks/authContext";
-  
+import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
+
 
 export default function NewsSection({ newsProps, isLoading, isFetching, refetch }) {
   const navigation = useNavigation();
@@ -26,7 +27,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
     const date = new Date(isoDate);
     return date.toLocaleDateString(undefined, options);
   }
-
+  console.log(newsProps?.length)
   // Hook to set the URL list
   useEffect(() => {
     const urls = newsProps.map((item) => item.url);
@@ -41,37 +42,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
   // Function to toggle bookmark and save article
   const toggleBookmarkAndSave = async (item, index) => {
     try {
-      const savedArticles = await AsyncStorage.getItem("savedArticles");
-      let savedArticlesArray = savedArticles ? JSON.parse(savedArticles) : [];
 
-      // Check if the article is already in the bookmarked list
-      const isArticleBookmarked = savedArticlesArray.some(
-        (savedArticle) => savedArticle.url === item.url
-      );
-
-      if (!isArticleBookmarked) {
-        // If the article is not bookmarked, add it to the bookmarked list
-        savedArticlesArray.push(item);
-        await AsyncStorage.setItem(
-          "savedArticles",
-          JSON.stringify(savedArticlesArray)
-        );
-        const updatedStatus = [...bookmarkStatus];
-        updatedStatus[index] = true;
-        setBookmarkStatus(updatedStatus);
-      } else {
-        // If the article is already bookmarked, remove it from the list
-        const updatedSavedArticlesArray = savedArticlesArray.filter(
-          (savedArticle) => savedArticle.url !== item.url
-        );
-        await AsyncStorage.setItem(
-          "savedArticles",
-          JSON.stringify(updatedSavedArticlesArray)
-        );
-        const updatedStatus = [...bookmarkStatus];
-        updatedStatus[index] = false;
-        setBookmarkStatus(updatedStatus);
-      }
     } catch (error) {
       console.log("Error Saving/Removing Article", error);
     }
@@ -183,7 +154,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
     );
   };
   return (
-    <View className=" bg-white dark:bg-neutral-900">
+    <View className=" bg-white dark:bg-neutral-900 ">
       {/* Header */}
       <FlatList
         nestedScrollEnabled={true}
@@ -193,9 +164,10 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
         refreshing={isFetching}
 
         data={newsProps}
-        // showsVerticalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
         keyExtractor={(item, index) => index.toString()}
         renderItem={renderItem}
+
       />
     </View>
 
