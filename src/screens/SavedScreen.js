@@ -12,16 +12,14 @@ import { AuthRequirement } from "./AuthRequired";
 import { fetchsavedNews } from "../utils/NewsApi";
 import { useQuery } from "@tanstack/react-query";
 import Loading from "../components/Loading/Loading";
+import { SavedNewsContext } from "../hooks/savedNewsContext";
 
 export default function SavedScreen() {
   const { colorScheme, toggleColorScheme } = useColorScheme();
   const { userInfo } = useContext(AuthContext);
+  const { savedNews, addSavedNews, removeSavedNews } = useContext(SavedNewsContext);
   const navigation = useNavigation();
-  const { data, isLoading, refetch, isFetching } = useQuery({
-    queryKey: ["savedNewss"],
-    queryFn: fetchsavedNews,
-  });
-  console.log(data?.length)
+
   // Function to handle click on an item
   const handleClick = (item) => {
     navigation.navigate("NewsDetails", item);
@@ -41,8 +39,10 @@ export default function SavedScreen() {
 
   const toggleBookmarkAndSave = async (item, index) => {
     try {
+      console.log(item?.id)
+      removeSavedNews(item);
     } catch (error) {
-      // console.log("Error Saving/Removing Article", error);
+      console.log("Error Saving/Removing Article", error);
     }
   };
 
@@ -118,9 +118,6 @@ export default function SavedScreen() {
   if (!userInfo) {
     return (<AuthRequirement />)
   }
-  if (isLoading) {
-    return <Loading />
-  }
   return (
     <SafeAreaView className="p-4 bg-white flex-1 dark:bg-neutral-900">
       {/* <StatusBar style={colorScheme == "dark" ? "light" : "dark"} /> */}
@@ -152,7 +149,7 @@ export default function SavedScreen() {
 
       <View style={{ marginVertical: hp(2) }} className="space-y-2 ">
         <FlatList
-          data={data}
+          data={savedNews}
           showsVerticalScrollIndicator={false}
           keyExtractor={(item) => item.title}
           renderItem={renderItem}

@@ -54,3 +54,7 @@ export const fetchsavedNews = async () => {
   const res = await newsApiCall(`${apiBaseUrl}/saved`)
   return res.data
 }
+export const fetchNewsByID = async (id) => {
+  const res = await newsApiCall(`${apiBaseUrl}/news/${id}`)
+  return res.data
+}

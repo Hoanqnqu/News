@@ -25,11 +25,11 @@ export default function DiscoverScreen() {
   const [activeCategory, setActiveCategory] = useState("");
   const navigation = useNavigation();
 
-    // Categories
-    const { data: categories, isLoading: isCategoriesLoading } = useQuery({
-      queryKey: ["categories"],
-      queryFn: fetchAllCategories,
-    });
+  // Categories
+  const { data: categories, isLoading: isCategoriesLoading } = useQuery({
+    queryKey: ["categories"],
+    queryFn: fetchAllCategories,
+  });
 
 
   const { data: discoverNew, isLoading: isDiscoverLoading, isFetching, refetch } = useQuery({
@@ -115,12 +115,12 @@ export default function DiscoverScreen() {
 
 
           <View
-          className="h-[500px]"
+            className="h-[500px]"
             contentContainerStyle={{
               paddingBottom: hp(70),
             }}
           >
-            <NewsSection newsProps={discoverNew?.data || []} isFetching={isFetching} isLoading={true} refetch={refetch} label="Discovery" />
+            <NewsSection newsProps={discoverNew?.data || []} isFetching={isFetching} isLoading={isDiscoverLoading} refetch={refetch} label="Discovery" />
           </View>
 
         </View>

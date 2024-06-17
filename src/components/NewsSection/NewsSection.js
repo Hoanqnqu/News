@@ -8,11 +8,11 @@ import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import { LoginRequiredContext } from "../../hooks/loginContext";
 import { AuthContext } from "../../hooks/authContext";
 import { ScrollView } from "react-native-reanimated/lib/typescript/Animated";
-
+import { SavedNewsContext } from "../../hooks/savedNewsContext";
 
 export default function NewsSection({ newsProps, isLoading, isFetching, refetch }) {
   const navigation = useNavigation();
-  const [urlList, setUrlList] = useState([]);
+  const { savedNews, addSavedNews, removeSavedNews } = useContext(SavedNewsContext);
   const [bookmarkStatus, setBookmarkStatus] = useState([]);
   const context = useContext(LoginRequiredContext);
   const { userInfo } = useContext(AuthContext);
@@ -28,53 +28,54 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
     return date.toLocaleDateString(undefined, options);
   }
   console.log(newsProps?.length)
-  // Hook to set the URL list
-  useEffect(() => {
-    const urls = newsProps.map((item) => item.url);
-    setUrlList(urls);
-  }, [newsProps]);
 
-  // Function to handle click on an item
   const handleClick = (item) => {
     navigation.navigate("NewsDetails", item);
   };
 
+  // Effect to load saved articles from AsyncStorage when the component mounts
+  const loadSavedArticles = useCallback(async () => {
+    try {
+      if (!savedNews || savedNews.length === 0) {
+        return;
+      }
+
+      // Check if article is already bookmarked
+      const isArticleBookmarkedList = newsProps.map((article) =>
+        savedNews.some((savedArticle) => savedArticle.id == article.id)
+      );
+      
+      // Set the bookmark status for all items based on the loaded data
+      setBookmarkStatus(isArticleBookmarkedList);
+    } catch (error) {
+      console.log("Error Loading Saved Articles", error);
+    }
+  }, [savedNews, newsProps]);
+
+  useEffect(() => {
+    loadSavedArticles();
+  }, [loadSavedArticles, savedNews]);
+
   // Function to toggle bookmark and save article
   const toggleBookmarkAndSave = async (item, index) => {
     try {
-
+      if (!userInfo) {
+        return;
+      }
+      if (bookmarkStatus[index]) {
+        removeSavedNews(item);
+      } else {
+        addSavedNews(item);
+      }
+      setBookmarkStatus((prevStatus) => {
+        const updatedStatus = [...prevStatus];
+        updatedStatus[index] = !prevStatus[index];
+        return updatedStatus;
+      });
     } catch (error) {
       console.log("Error Saving/Removing Article", error);
     }
   };
-  console.log(isFetching, isLoading)
-  // Effect to load saved articles from AsyncStorage when the component mounts
-  useFocusEffect(
-    useCallback(() => {
-      const loadSavedArticles = async () => {
-        try {
-          const savedArticles = await AsyncStorage.getItem("savedArticles");
-          const savedArticlesArray = savedArticles
-            ? JSON.parse(savedArticles)
-            : [];
-
-          // Check if each URL in 'urlList' exists in the bookmarked list
-          const isArticleBookmarkedList = urlList.map((url) =>
-            savedArticlesArray.some((savedArticle) => savedArticle.url === url)
-          );
-
-          // Set the bookmark status for all items based on the loaded data
-          setBookmarkStatus(isArticleBookmarkedList);
-        } catch (error) {
-          console.log("Error Loading Saved Articles", error);
-        }
-      };
-
-      loadSavedArticles();
-    }, [navigation, urlList]) // Include 'navigation' in the dependencies array if needed
-  );
-
-  // Component to render each item in the list
 
   const renderItem = ({ item, index }) => {
 
@@ -134,10 +135,10 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
               onPress={() => {
                 console.log("userInfo:", userInfo)
                 if (!userInfo) {
-
                   context.handleLoginRequired(true)
                 }
                 else {
+                  console.log("index:", index)
                   toggleBookmarkAndSave(item, index)
                 }
 
@@ -161,7 +162,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
         onRefresh={async () => {
           refetch()
         }}
-        refreshing={isFetching}
+        refreshing={isLoading}
 
         data={newsProps}
         showsVerticalScrollIndicator={false}

@@ -1,8 +1,41 @@
 import Animated, { SlideInDown, SlideOutDown } from 'react-native-reanimated';
-import { FlatList, TextInput, Text, View } from 'react-native';
-import React from 'react';
+import { FlatList, TextInput, Text, View, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
 import CommentBlock from '../CommentBlock';
-const Comment = () => {
+import { fetchComments, postComment } from '../../utils/Comment';
+import { useMutation } from '@tanstack/react-query';
+const Comment = ({ newsID }) => {
+
+    const [comments, setComments] = useState();
+
+    const [count, setCount] = useState(0)
+    const [text, setText] = useState('');
+    const fetchComment = async () => {
+        const res = await fetchComments(newsID);
+        setComments(res);
+        setCount(res?.length || 0);
+    };
+
+    const { mutate } = useMutation(
+        {
+            mutationFn: postComment,
+            onSuccess: () => {
+                fetchComment();
+                setText('');
+            },
+            onError: (error) => {
+                setText('');
+                console.log(error);
+            }
+        });
+
+    useEffect(() => {
+        fetchComment();
+    }, [newsID]);
+    useEffect(() => {
+        fetchComment()
+        setText('')
+    }, [newsID])
 
     return (
         <Animated.View
@@ -23,54 +56,38 @@ const Comment = () => {
             <View
                 className="flex flex-col items-center justify-center h-full w-full"
             >
-                <Text className="text-lg font-bold text-black">56 comments</Text>
+                <Text className="text-lg font-bold text-black">{count} comments</Text>
 
                 <FlatList className="w-full flex h-full"
                     showsVerticalScrollIndicator={false}
-                    data={[
-                        {
-                            name: 'John Doe',
-                            image_url: 'https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/365120153_3332590973717802_2390387319335403871_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEjVLT0-I_uLGz9cnm1Q4Ao-ISRkwI191n4hJGTAjX3WbvlPBqV4VrhTuricRcPRrLziqlJt3M2TgNgXwRCvIJM&_nc_ohc=NBRNM2pYLNkQ7kNvgG7etTV&_nc_ht=scontent.fdad1-3.fna&oh=00_AYAo2YOo6R_tLoSQrsJF64UQ5EaM4av44BhaDqwTtOhFnA&oe=666E5F57',
-                            created_at: '2022-05-11T10:50:12.000000Z',
-                            comment: 'this is a comment',
-                        },
-                        {
-                            name: 'John Doe',
-                            image_url: 'https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/365120153_3332590973717802_2390387319335403871_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEjVLT0-I_uLGz9cnm1Q4Ao-ISRkwI191n4hJGTAjX3WbvlPBqV4VrhTuricRcPRrLziqlJt3M2TgNgXwRCvIJM&_nc_ohc=NBRNM2pYLNkQ7kNvgG7etTV&_nc_ht=scontent.fdad1-3.fna&oh=00_AYAo2YOo6R_tLoSQrsJF64UQ5EaM4av44BhaDqwTtOhFnA&oe=666E5F57',
-                            created_at: '2022-05-11T10:50:12.000000Z',
-                            comment: 'this is a comment',
-                        },
-                        {
-                            name: 'John Doe',
-                            image_url: 'https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/365120153_3332590973717802_2390387319335403871_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEjVLT0-I_uLGz9cnm1Q4Ao-ISRkwI191n4hJGTAjX3WbvlPBqV4VrhTuricRcPRrLziqlJt3M2TgNgXwRCvIJM&_nc_ohc=NBRNM2pYLNkQ7kNvgG7etTV&_nc_ht=scontent.fdad1-3.fna&oh=00_AYAo2YOo6R_tLoSQrsJF64UQ5EaM4av44BhaDqwTtOhFnA&oe=666E5F57',
-                            created_at: '2022-05-11T10:50:12.000000Z',
-                            comment: 'this is a comment',
-                        },
-                        {
-                            name: 'John Doe',
-                            image_url: 'https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/365120153_3332590973717802_2390387319335403871_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEjVLT0-I_uLGz9cnm1Q4Ao-ISRkwI191n4hJGTAjX3WbvlPBqV4VrhTuricRcPRrLziqlJt3M2TgNgXwRCvIJM&_nc_ohc=NBRNM2pYLNkQ7kNvgG7etTV&_nc_ht=scontent.fdad1-3.fna&oh=00_AYAo2YOo6R_tLoSQrsJF64UQ5EaM4av44BhaDqwTtOhFnA&oe=666E5F57',
-                            created_at: '2022-05-11T10:50:12.000000Z',
-                            comment: 'this is a comment',
-                        },
-                        {
-                            name: 'John Doe',
-                            image_url: 'https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/365120153_3332590973717802_2390387319335403871_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEjVLT0-I_uLGz9cnm1Q4Ao-ISRkwI191n4hJGTAjX3WbvlPBqV4VrhTuricRcPRrLziqlJt3M2TgNgXwRCvIJM&_nc_ohc=NBRNM2pYLNkQ7kNvgG7etTV&_nc_ht=scontent.fdad1-3.fna&oh=00_AYAo2YOo6R_tLoSQrsJF64UQ5EaM4av44BhaDqwTtOhFnA&oe=666E5F57',
-                            created_at: '2022-05-11T10:50:12.000000Z',
-                            comment: 'this is a comment',
-                        },
-                    ]}
+                    data={comments}
                     renderItem={({ item }) => <CommentBlock comment={item} />}
                 />
 
-                <View className=" flex-row p-[6px] justify-between items-center bg-neutral-100 rounded-full w-full my-4">
-                    <TextInput
-                        onChangeText={() => { }}
-                        placeholder="Write a comment..."
-                        placeholderTextColor={"gray"}
-                        className=" font-medium text-black tracking-wider p-3 py-1 w-[90%] "
-                    />
-                </View>
+                <View className="flex-row justify-center items-center mx-5 ml-14">
+                    <View className=" flex-row p-[6px] justify-between items-center bg-neutral-100 rounded-full w-full my-4 mr-3 ">
+                        <TextInput
+                            value={text}
+                            onChangeText={(a) => { setText(a) }}
+                            placeholder="Write a comment..."
+                            placeholderTextColor={"gray"}
+                            className=" font-medium text-black tracking-wider p-3 py-1 w-[90%] "
+                        />
 
+                    </View>
+                    <TouchableOpacity onPress={() => {
+                        mutate({
+                            comment: text,
+                            news_id: newsID
+                        })
+                    }} >
+                        <Text
+                            className="text-white bg-slate-600 px-4 py-2 text-sm rounded-full  "
+                        >
+                            Post
+                        </Text>
+                    </TouchableOpacity>
+                </View>
             </View>
 
         </Animated.View >

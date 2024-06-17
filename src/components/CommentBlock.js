@@ -12,7 +12,7 @@ const CommentBlock = ({ comment }) => {
                 <Image
                     source={{
                         uri:
-                            comment.image_url,
+                            comment.user_avatar,
                     }}
                     style={{
                         width: 46,
@@ -27,18 +27,18 @@ const CommentBlock = ({ comment }) => {
                     <Text
                         class="font-serif text-base text-gray-900 dark:text-neutral-300"
                     >
-                        {comment.name}
+                        {comment.user_name}
                     </Text>
                     <Text
                         className="text-gray-900 dark:text-neutral-300 w-full"
                     >
-                        {comment.comment}
+                        {comment.text}
 
                     </Text>
                     <Text
                         className="text-xs text-gray-500 w-full pt-1"
                     >
-                        {moment(comment.created_at).format('ll')}
+                        {moment(comment.published_at).format('ll')}
                     </Text>
                 </View>
             </View>
