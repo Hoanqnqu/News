@@ -1,6 +1,6 @@
 import apiInstance from "./axiosConfig";
 
-const apiBaseUrl = "http://192.168.1.9:3000";
+const apiBaseUrl = "https://newsfu.xyz";
 
 export const fetchComments = async (newsID) => {
   console.log(newsID)

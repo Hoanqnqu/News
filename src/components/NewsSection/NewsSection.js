@@ -27,7 +27,6 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
     const date = new Date(isoDate);
     return date.toLocaleDateString(undefined, options);
   }
-  console.log(newsProps?.length)
 
   const handleClick = (item) => {
     navigation.navigate("NewsDetails", item);
@@ -44,7 +43,7 @@ export default function NewsSection({ newsProps, isLoading, isFetching, refetch 
       const isArticleBookmarkedList = newsProps.map((article) =>
         savedNews.some((savedArticle) => savedArticle.id == article.id)
       );
-      
+
       // Set the bookmark status for all items based on the loaded data
       setBookmarkStatus(isArticleBookmarkedList);
     } catch (error) {

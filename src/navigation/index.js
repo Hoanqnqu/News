@@ -19,6 +19,7 @@ import { LoginRequiredContext } from "../hooks/loginContext";
 import { AuthContext } from "../hooks/authContext";
 import Loading from "../components/Loading/Loading";
 
+
 const android = Platform.OS === "android";
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 const Tab = createBottomTabNavigator();
@@ -93,7 +94,10 @@ export default function AppNavigation() {
                 <Stack.Screen
                     name="NewsDetails"
                     component={NewsDetails}
-                    options={{ animation: "slide_from_bottom" }}
+                    options={{
+                        animation: "slide_from_right"
+
+                    }}
                 />
 
 

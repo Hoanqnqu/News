@@ -3,7 +3,7 @@ import { Button, Text, View, SafeAreaView, Image, StyleSheet, ScrollView, Toucha
 import { GoogleSignin } from '@react-native-google-signin/google-signin';
 import React, { useContext } from 'react';
 import { signInWithGoogle } from '../utils/auth';
-
+import FeatherIcon from "react-native-vector-icons/Feather";
 import { AuthRequirement } from './AuthRequired';
 import { AuthContext } from '../hooks/authContext';
 import LottieView from 'lottie-react-native';
@@ -25,24 +25,7 @@ const ProfileScreen = () => {
     }
   };
 
-  const handleSignIn = async () => {
-    const userInfo = await signInWithGoogle();
-    console.log({
-      auth_id: userInfo?.user?.id,
-      name: userInfo?.user?.name,
-      email: userInfo?.user?.email,
-      role: 'user',
-      image_url: userInfo?.user?.photo
-    })
-    setUserInfo(userInfo?.user?.id)
-    mutation.mutate({
-      auth_id: userInfo?.user?.id,
-      name: userInfo?.user?.name,
-      email: userInfo?.user?.email,
-      role: 'user',
-      image_url: userInfo?.user?.photo
-    })
-  };
+
   if (!userInfo) {
     return (<AuthRequirement />)
   }
@@ -69,31 +52,31 @@ const ProfileScreen = () => {
               elevation: 5,
             }}></View>
             <View style={styles.profileImage}>
-              <Image source={{
+              < Image source={{
                 uri:
-                  'https://scontent.fdad1-3.fna.fbcdn.net/v/t39.30808-1/365120153_3332590973717802_2390387319335403871_n.jpg?stp=dst-jpg_p480x480&_nc_cat=110&ccb=1-7&_nc_sid=5f2048&_nc_eui2=AeEjVLT0-I_uLGz9cnm1Q4Ao-ISRkwI191n4hJGTAjX3WbvlPBqV4VrhTuricRcPRrLziqlJt3M2TgNgXwRCvIJM&_nc_ohc=NBRNM2pYLNkQ7kNvgG7etTV&_nc_ht=scontent.fdad1-3.fna&oh=00_AYAo2YOo6R_tLoSQrsJF64UQ5EaM4av44BhaDqwTtOhFnA&oe=666E5F57',
-              }} style={styles.image} ></Image>
+                  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQV5Yo24K45gHxcrK_QH3boGcH1uUjMIQ8nKygzVAdS5cE3O1LSjInbW5inRFbPfMHlxkY&usqp=CAU',
+              }} style={styles.image} />
             </View>
 
-            <View style={styles.add}>
-
-            </View>
+            <TouchableOpacity style={styles.add}>
+              <FeatherIcon name="edit" color="white" size={22} />
+            </TouchableOpacity>
           </View>
 
           <View className="mx-6 " style={styles.infoContainer}>
             <Text className="mt-3" style={[styles.text, { fontWeight: "200", fontSize: 36 }]}>Julie</Text>
             <Text className="font-serif text-base text-gray-900 dark:text-neutral-300">User</Text>
             <View className="flex flex-row justify-between w-full mt-3">
-              <Text className="text-gray-900" style={[styles.text, { color: "#AEB5BC", fontSize: 15 }]} >Email</Text>
-              <Text style={[styles.text, { color: "#AEB5BC", fontSize: 15 }]}>nhathoangthuychaub1@gmail.com</Text>
+              <Text className="text-gray-900" style={[styles.text, { fontSize: 15 }]} >Email</Text>
+              <Text className="text-gray-900" style={[styles.text, { fontSize: 15 }]}>nhathoangthuychaub1@gmail.com</Text>
             </View>
 
-            <View className="flex flex-row justify-between w-full mt-2">
-              <Text className="text-gray-900" style={[styles.text, { color: "#AEB5BC", fontSize: 15 }]} >Phone</Text>
-              <Text style={[styles.text, { color: "#AEB5BC", fontSize: 15 }]}>0852336242</Text>
+            <View className="flex flex-row justify-between w-full mt-4">
+              <Text className="text-gray-900" style={[styles.text, { fontSize: 15 }]} >Phone</Text>
+              <Text className="text-gray-900" style={[styles.text, { fontSize: 15 }]}>0852336242</Text>
             </View>
-            <View style={styles.divider} />
 
+            <View className="w-screen h-[0.5px]  mt-6 bg-[#52575D] z-100" ></View>
             <Image source={require('../components/Lottie/news.jpeg')} className="w-[400px] h-[200px] mt-24" />
           </View>
 
@@ -121,8 +104,9 @@ const styles = StyleSheet.create({
     width: undefined
   },
   divider: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: '#5E5D5E',
+    height: 10,
+    backgroundColor: 'black',
+    width: "100%",
   },
   titleBar: {
     flexDirection: "row",

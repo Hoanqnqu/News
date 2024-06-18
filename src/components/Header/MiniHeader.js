@@ -12,15 +12,6 @@ export default function MiniHeader({ label }) {
       >
         {label}
       </Text>
-
-      <Text
-        className="text-base text-gray-600 dark:text-neutral-300 "
-        style={{
-          fontFamily: "SpaceGroteskMedium",
-        }}
-      >
-        View all
-      </Text>
     </View>
   );
 }

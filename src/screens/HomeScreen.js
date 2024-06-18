@@ -46,7 +46,7 @@ export default function HomeScreen() {
         )}
 
         {/* Recommended News */}
-        <View className="h-[420px]">
+        <View className="h-[450px]">
           <MiniHeader label="Recommended" />
 
           <NewsSection

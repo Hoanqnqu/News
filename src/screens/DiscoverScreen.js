@@ -102,15 +102,6 @@ export default function DiscoverScreen() {
             >
               Discover
             </Text>
-
-            <Text
-              className="text-base text-green-800 dark:text-neutral-300"
-              style={{
-                fontFamily: "SpaceGroteskBold",
-              }}
-            >
-              View all
-            </Text>
           </View>
 
 

@@ -20,7 +20,7 @@ const CommonLogin = () => {
     })
     useEffect(() => {
         if (mutation.isSuccess) {
-            console.log(mutation.data?.data?.token)
+            console.log(mutation.data?.data)
             login(mutation.data?.data?.token)
             context.handleLoginRequired(false)
         }

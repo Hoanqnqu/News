@@ -16,9 +16,11 @@ import React, { useEffect, useState, useContext } from "react";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import RenderHtml from 'react-native-render-html';
 import { WebView } from "react-native-webview";
+import NewsSection from "../components/NewsSection/NewsSection";
+
 import { ChevronLeftIcon, ShareIcon } from "react-native-heroicons/outline";
 import { BookmarkSquareIcon } from "react-native-heroicons/solid";
-
+import MiniHeader from "../components/Header/MiniHeader";
 import AntDesignIcon from "react-native-vector-icons/AntDesign";
 import OcticonsIcon from "react-native-vector-icons/Octicons";
 import Comment from "../components/Modals/Comment";
@@ -54,7 +56,6 @@ export default function NewsDetails() {
 
 
   useEffect(() => {
-    console.log(data)
     toggleLiked(data?.isLiked);
     toggleDisliked(data?.isDisliked);
 
@@ -162,46 +163,11 @@ export default function NewsDetails() {
         </AnimatedPressable>
         <Comment newsID={item?.id} />
       </>}
-      <View className="w-full flex-row justify-between items-center px-4 pt-4 pb-4 bg-white">
-        <View className="bg-gray-100 p-2 rounded-full items-center justify-center">
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <ChevronLeftIcon size={25} strokeWidth={3} color="gray" />
-          </TouchableOpacity>
-        </View>
 
-        <View className="space-x-3 rounded-full items-center justify-center flex-row">
-          <TouchableOpacity onPress={toggleLike} className="bg-gray-100 p-2 rounded-full">
-            <AntDesignIcon name="like2" size={25} color={isLiked ? "green" : "gray"} strokeWidth={2} />
-          </TouchableOpacity>
+      <ScrollView className="bg-white text-gray-900 dark:text-neutral-300 relative pt-14" >
 
-          <TouchableOpacity onPress={toggleDislike} className="bg-gray-100 p-2 rounded-full">
-            <AntDesignIcon name="dislike2" size={25} color={isDisliked ? "green" : "gray"} strokeWidth={2} />
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={() => setVisible(true)} className="bg-gray-100 p-2 rounded-full">
-            <OcticonsIcon name="comment" size={25} color="gray" strokeWidth={2} />
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            className="bg-gray-100 p-2 rounded-full"
-            onPress={toggleBookmarkAndSave}
-          >
-            <BookmarkSquareIcon
-              size={25}
-              color={isBookmarked ? "green" : "gray"}
-              strokeWidth={2}
-            />
-          </TouchableOpacity>
-
-          <TouchableOpacity className="bg-gray-100 p-2 rounded-full">
-            <ShareIcon size={25} color="gray" strokeWidth={2} />
-          </TouchableOpacity>
-
-        </View>
-      </View>
-      <ScrollView className="bg-white text-gray-900 dark:text-neutral-300">
         <Text
-          className="text-2xl font-bold px-4 pb-4 text-gray-900 dark:text-neutral-300"
+          className="text-2xl font-bold px-6 pb-4 text-gray-900 dark:text-neutral-300"
         >
           {data.title}
         </Text>
@@ -213,13 +179,15 @@ export default function NewsDetails() {
           }}
 
           resizeMode="cover"
-          className="w-full h-60"
+          className="h-60 mx-4 rounded-md"
         />
         <Text
-          className="text-xl font-semibold italic px-4 text-gray-900 dark:text-neutral-300"
+          className="text-xl mt-3 font-semibold italic px-4 text-gray-900 dark:text-neutral-300"
         >
           {data.description}
         </Text>
+        <View className="w-screen h-[0.5px]  mt-4 bg-[#52575D] z-100" ></View>
+
         <View
           className="w-full text-gray-900 dark:text-neutral-300 px-4"
         >
@@ -227,8 +195,9 @@ export default function NewsDetails() {
             html: data.content,
           }} contentWidth={width} />
         </View>
+        <View className="w-screen h-[0.5px]  mt-4 bg-[#52575D] z-100" ></View>
         <Text
-          className={"px-4 py-4 text-gray-900 dark:text-neutral-300"}
+          className={"px-4  text-gray-900 dark:text-neutral-300"}
           style={{
 
             fontSize: 15,
@@ -238,7 +207,7 @@ export default function NewsDetails() {
           Author: {item.author === null ? 'Legit Source' : item.author}
         </Text>
         <Text
-          className={"px-4 py-4 text-gray-900 dark:text-neutral-300"}
+          className={"px-4  text-gray-900 dark:text-neutral-300"}
           style={{
             fontSize: 15,
             marginTop: 10,
@@ -246,7 +215,53 @@ export default function NewsDetails() {
           }}>
           🕘 {moment(data.publishedAt).format('MMMM Do YYYY, h:mm a')}
         </Text>
+        <MiniHeader label="Related" />
+        <View>
+          <NewsSection
+            label="Recommendation"
+            newsProps={data.related_news || []}
+            isFetching={false}
+            isLoading={false}
+            refetch={() => { }}
+          />
+        </View>
+        <View className="h-[100px]"></View>
+
       </ ScrollView>
+      <View className="bg-gray-100 p-2 rounded-full items-center justify-center absolute top-4 left-4 z-100">
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <ChevronLeftIcon size={25} strokeWidth={3} color="gray" />
+        </TouchableOpacity>
+      </View >
+      <View className=" rounded-full items-center justify-center flex-col absolute bottom-16 right-5 gap-3">
+        <TouchableOpacity onPress={toggleLike} className="bg-gray-100 p-2 rounded-full">
+          <AntDesignIcon name="like2" size={25} color={isLiked ? "green" : "gray"} strokeWidth={2} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={toggleDislike} className="bg-gray-100 p-2 rounded-full">
+          <AntDesignIcon name="dislike2" size={25} color={isDisliked ? "green" : "gray"} strokeWidth={2} />
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={() => setVisible(true)} className="bg-gray-100 p-2 rounded-full">
+          <OcticonsIcon name="comment" size={25} color="gray" strokeWidth={2} />
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          className="bg-gray-100 p-2 rounded-full"
+          onPress={toggleBookmarkAndSave}
+        >
+          <BookmarkSquareIcon
+            size={25}
+            color={isBookmarked ? "green" : "gray"}
+            strokeWidth={2}
+          />
+        </TouchableOpacity>
+
+        <TouchableOpacity className="bg-gray-100 p-2 rounded-full">
+          <ShareIcon size={25} color="gray" strokeWidth={2} />
+        </TouchableOpacity>
+
+      </View>
     </>
   );
 }

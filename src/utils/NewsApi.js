@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 // Endpoints
 import apiInstance from "./axiosConfig";
 
-const apiBaseUrl = "http://192.168.1.9:3000";
+const apiBaseUrl = "https://newsfu.xyz";
 
 const latestNewsURL = `${apiBaseUrl}/latest`;
 const recommendedNewsUrl = `${apiBaseUrl}/recommend`;
